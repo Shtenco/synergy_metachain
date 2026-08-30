@@ -1,0 +1,16 @@
+[package]
+name = "synergy-metachain"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "Post-quantum metachain integration substrate for SYNERGY"
+
+[lib]
+name = "synergy_metachain"
+path = "src/lib.rs"
+
+[features]
+default = []
+production-pq = []
+
+[dependencies]
