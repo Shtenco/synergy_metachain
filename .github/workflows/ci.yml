@@ -16,5 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - name: cargo test
+      - name: cargo test (core)
         run: cargo test --all-targets
+      - name: cargo test (experimental FIPS 204/205 provider)
+        run: cargo test --all-targets --features experimental-rustcrypto-pq
