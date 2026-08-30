@@ -11,6 +11,8 @@ path = "src/lib.rs"
 
 [features]
 default = []
-production-pq = []
+experimental-rustcrypto-pq = ["dep:ml-dsa", "dep:slh-dsa"]
 
 [dependencies]
+ml-dsa = { version = "0.1.1", optional = true }
+slh-dsa = { version = "0.1.0", optional = true }
