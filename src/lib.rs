@@ -4,6 +4,7 @@ pub mod bridge;
 pub mod checkpoint;
 pub mod light_client;
 pub mod pq;
+pub mod providers;
 pub mod upstream;
 
 pub type Hash32 = [u8; 32];
