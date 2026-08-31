@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId = "ai.sinergy.messenger"
         minSdk = 26
-        targetSdk = 37
+n        targetSdk = 37
         versionCode = 200
         versionName = "0.2.0-native"
         vectorDrawables.useSupportLibrary = true
@@ -41,5 +41,5 @@ dependencies {
     implementation("androidx.webkit:webkit:1.14.0")
     implementation("androidx.core:core:1.17.0")
     implementation("io.github.tdlibx:td-android:1.8.56-RC9")
-    implementation("org.bouncycastle:bcprov-jdk18on:1.85")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.85.2")
 }
