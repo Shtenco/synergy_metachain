@@ -1,0 +1,66 @@
+name: SINERGY Messenger v0.2 Pure Shell
+
+on:
+  push:
+    branches: [sinergy-messenger-v0.2-native]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  GRADLE_VERSION: '9.6.0'
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Clone private branch without marketplace actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rm -rf "$GITHUB_WORKSPACE/src"
+          gh repo clone "$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE/src" -- --branch "$GITHUB_REF_NAME" --single-branch
+          git -C "$GITHUB_WORKSPACE/src" rev-parse HEAD
+
+      - name: Inspect runner
+        run: |
+          set -euo pipefail
+          java -version
+          echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-}"
+          command -v sdkmanager || true
+          ls -la "${ANDROID_SDK_ROOT:-/opt/hostedtoolcache}" | head -40 || true
+
+      - name: Install Android API 37 and Gradle 9.6
+        run: |
+          set -euo pipefail
+          SDKMANAGER="$(command -v sdkmanager || true)"
+          if [ -z "$SDKMANAGER" ]; then
+            SDKMANAGER="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+          fi
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "platforms;android-37" "build-tools;36.0.0"
+          curl -fL --retry 4 --retry-delay 2 "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" -o /tmp/gradle.zip
+          unzip -q /tmp/gradle.zip -d /tmp
+          /tmp/gradle-${GRADLE_VERSION}/bin/gradle --version
+
+      - name: Compile release
+        working-directory: ${{ github.workspace }}/src/apps/sinergy-messenger
+        run: |
+          set -euo pipefail
+          export JAVA_HOME="${JAVA_HOME_17_X64:-$JAVA_HOME}"
+          /tmp/gradle-${GRADLE_VERSION}/bin/gradle :app:assembleRelease --stacktrace --warning-mode all
+
+      - name: Verify native payload
+        working-directory: ${{ github.workspace }}/src/apps/sinergy-messenger
+        run: |
+          set -euo pipefail
+          APK=app/build/outputs/apk/release/app-release-unsigned.apk
+          test -f "$APK"
+          unzip -l "$APK" | grep -F 'assets/index.html'
+          unzip -l "$APK" | grep -F 'lib/arm64-v8a/libtdjni.so'
+          unzip -l "$APK" | grep -E 'classes[0-9]*\.dex'
+          sha256sum "$APK"
+          du -h "$APK"
