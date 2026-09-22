@@ -1,0 +1,22 @@
+name: metachain-ci
+
+on:
+  push:
+    branches:
+      - main
+      - 'feat/**'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: cargo test (core)
+        run: cargo test --all-targets
+      - name: cargo test (experimental FIPS 204/205 provider)
+        run: cargo test --all-targets --features experimental-rustcrypto-pq
