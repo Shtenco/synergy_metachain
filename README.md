@@ -1,9 +1,9 @@
-# 🌉 SYNERGY MetaChain — verified technical dossier
+#  SYNERGY MetaChain — verified technical dossier
 
-> **Статус:** 🟡 CANDIDATE — trust-consumer/replay guard реализован; полноценный cross-chain bridge/state machine ещё не доказан.
+> **Статус:**  CANDIDATE — trust-consumer/replay guard реализован; полноценный cross-chain bridge/state machine ещё не доказан.
 > **Проверено по фактическому `main`:** 29.09.2026.
 
-## 1. 🎯 Задача
+## 1.  Задача
 
 `synergy_metachain` — граница cross-chain / bridge trust внутри федерации SYNERGY. Ключевая проблема любого bridge-механизма — не сам перенос сообщения, а сохранение уникальности экономического события:
 
@@ -15,7 +15,7 @@ one finalized source event
 
 и недопущение двойного признания одного экономического актива.
 
-## 2. 📦 Фактическое дерево
+## 2.  Фактическое дерево
 
 ```text
 synergy_metachain/
@@ -32,7 +32,7 @@ synergy_metachain/
 
 Это уже не чисто документный repo: есть исполняемый trust-consumer и тесты.
 
-## 3. 🧠 Реализованный runtime
+## 3.  Реализованный runtime
 
 `runtime/trust_contracts.py` объявляет upstream contract:
 
@@ -65,7 +65,7 @@ accounting_authority = false
 
 Последнее поле принципиально: даже валидированный trust commitment **не становится бухгалтерской authority**.
 
-## 4. 🏗️ Архитектура
+## 4.  Архитектура
 
 ```mermaid
 sequenceDiagram
@@ -84,7 +84,7 @@ sequenceDiagram
 
 Текущий runtime — **trust/replay gate**, а не полный token bridge.
 
-## 5. 📥 Inputs
+## 5.  Inputs
 
 Реализованный consumer ожидает:
 
@@ -107,7 +107,7 @@ finality_status
 - Merkle/SPV verification;
 - reorg watcher.
 
-## 6. 📤 Outputs
+## 6.  Outputs
 
 После успешной проверки:
 
@@ -124,7 +124,7 @@ finality_status
 
 Это доказательство прохождения конкретного local trust gate, а не доказательство того, что внешний chain действительно исполнил mint/burn.
 
-## 7. 🔒 Канонические bridge-инварианты
+## 7.  Канонические bridge-инварианты
 
 ```text
 one source event -> at most one destination claim
@@ -149,7 +149,7 @@ eq
 
 если mirror представляет ту же самую экономическую собственность.
 
-## 8. 🧪 Реальные тесты
+## 8.  Реальные тесты
 
 `tests/test_trust_contracts.py` содержит два ключевых сценария:
 
@@ -166,7 +166,7 @@ Payload с `finality_status=PENDING` отвергается.
 
 Это реальные unit tests исходников. README не превращает наличие тестов в утверждение о production bridge.
 
-## 9. 📚 Legacy distillation evidence
+## 9.  Legacy distillation evidence
 
 ### V2 import queue
 
@@ -194,22 +194,22 @@ Payload с `finality_status=PENDING` отвергается.
 - replay/double-mint обязаны падать;
 - Financial OS не должен считать source lock и mirror двумя отдельными hard assets.
 
-## 10. ⚠️ Threat / failure model
+## 10.  Threat / failure model
 
 | Риск | Текущий/требуемый gate |
 |---|---|
-| replay одного commitment | ✅ локально блокируется |
-| claim по PENDING source | ✅ блокируется |
-| malformed digest | ✅ блокируется |
-| missing source identity | ✅ блокируется |
-| same source event under two commitment IDs | ⚠️ ещё нужен source-event replay index |
-| chain reorg after finality claim | ❌ не реализовано |
-| forged validator/light-client proof | ❌ не реализовано |
-| destination mint twice by external executor | ❌ не доказано |
+| replay одного commitment |  локально блокируется |
+| claim по PENDING source |  блокируется |
+| malformed digest |  блокируется |
+| missing source identity |  блокируется |
+| same source event under two commitment IDs |  ещё нужен source-event replay index |
+| chain reorg after finality claim |  не реализовано |
+| forged validator/light-client proof |  не реализовано |
+| destination mint twice by external executor |  не доказано |
 | accounting double-recognition | policy описана, E2E не доказан |
-| partial lock/mint failure | ❌ state machine отсутствует |
+| partial lock/mint failure |  state machine отсутствует |
 
-## 11. 🧪 Required negative tests следующего уровня
+## 11.  Required negative tests следующего уровня
 
 - два разных `commitment_id` для одного `source_event_id`;
 - amount mismatch;
@@ -223,7 +223,7 @@ Payload с `finality_status=PENDING` отвергается.
 - persistent replay state after restart;
 - multi-node replay consistency.
 
-## 12. 🛠️ Воспроизводимость
+## 12.  Воспроизводимость
 
 Ожидаемый локальный test path:
 
@@ -236,20 +236,20 @@ pytest -q
 
 Этот путь описывает локальное воспроизведение unit tests. До observed run он не маркируется как GREEN CI evidence.
 
-## 13. 🗺️ Карта репозитория
+## 13.  Карта репозитория
 
 | Путь | Назначение | Статус |
 |---|---|---|
-| `runtime/trust_contracts.py` | trust commitment consumer + in-memory replay guard | ✅ |
-| `tests/test_trust_contracts.py` | unit tests finality/replay | ✅ |
-| `docs/legacy_distillation_v2/IMPORT_QUEUE.md` | legacy bridge queue | ✅ |
-| `docs/LEGACY_DISTILLATION_V3_IMPORT_QUEUE.md` | V3 promotion gates | ✅ |
-| persistent replay store | durable replay protection | ❌ |
-| chain adapter | source/destination RPC | ❌ |
-| bridge state machine | lock/burn/mint lifecycle | ❌ |
-| E2E harness | cross-chain observed execution | ❌ |
+| `runtime/trust_contracts.py` | trust commitment consumer + in-memory replay guard |  |
+| `tests/test_trust_contracts.py` | unit tests finality/replay |  |
+| `docs/legacy_distillation_v2/IMPORT_QUEUE.md` | legacy bridge queue |  |
+| `docs/LEGACY_DISTILLATION_V3_IMPORT_QUEUE.md` | V3 promotion gates |  |
+| persistent replay store | durable replay protection |  |
+| chain adapter | source/destination RPC |  |
+| bridge state machine | lock/burn/mint lifecycle |  |
+| E2E harness | cross-chain observed execution |  |
 
-## 14. 🔗 Место в SYNERGY
+## 14.  Место в SYNERGY
 
 ```mermaid
 flowchart LR
@@ -266,21 +266,21 @@ flowchart LR
 - [`synergy_pay_system`](https://github.com/Shtenco/synergy_pay_system) — payment/settlement;
 - [`synergy_net`](https://github.com/Shtenco/synergy_net) — transport.
 
-## 15. 📊 Evidence maturity
+## 15.  Evidence maturity
 
 | Layer | Status |
 |---|---|
-| bridge invariants | ✅ documented |
-| replay consumer | ✅ implemented |
-| unit tests | ✅ repository contains |
-| persistent replay protection | ❌ |
-| exact chain finality verification | ❌ |
-| lock/burn/mint conservation E2E | ❌ |
-| multi-chain execution | ❌ |
-| accounting E2E | ❌ |
-| production bridge | ❌ |
+| bridge invariants |  documented |
+| replay consumer |  implemented |
+| unit tests |  repository contains |
+| persistent replay protection |  |
+| exact chain finality verification |  |
+| lock/burn/mint conservation E2E |  |
+| multi-chain execution |  |
+| accounting E2E |  |
+| production bridge |  |
 
-## 16. 🚀 Roadmap
+## 16.  Roadmap
 
 1. bind replay uniqueness to both commitment id and source event id;
 2. persistent replay storage;
@@ -295,7 +295,7 @@ flowchart LR
 11. Financial OS double-recognition negative test;
 12. observed federation evidence.
 
-## 17. 🛑 Что проект НЕ утверждает
+## 17.  Что проект НЕ утверждает
 
 - что полноценный bridge уже работает;
 - что токены реально mint/burn across chains;
@@ -307,4 +307,4 @@ flowchart LR
 
 ---
 
-[🧭 SYNERGY SYSTEM](https://github.com/Shtenco/synergy_system) · [📚 Атлас 75 репозиториев](https://github.com/Shtenco/synergy_system/blob/main/docs/SYNERGY_REPOSITORY_ATLAS.md) · [🧾 Registry](https://github.com/Shtenco/synergy_system/blob/main/registry/SYNERGY_REPOSITORIES.json)
+[ SYNERGY SYSTEM](https://github.com/Shtenco/synergy_system) · [ Атлас 75 репозиториев](https://github.com/Shtenco/synergy_system/blob/main/docs/SYNERGY_REPOSITORY_ATLAS.md) · [ Registry](https://github.com/Shtenco/synergy_system/blob/main/registry/SYNERGY_REPOSITORIES.json)
