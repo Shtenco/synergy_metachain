@@ -1,3 +1,9 @@
+<!-- RESEARCH-V2-2026:START -->
+<img src="assets/readme/scientific-process-v2.svg" width="100%" alt="METACHAIN / BRIDGE TRUST GATE"/>
+
+[Полное научное досье V2](docs/SCIENTIFIC_DOSSIER_V2_2026.md) — исследовательский вклад, математика и воспроизводимость. Весь прежний README сохранён.
+<!-- RESEARCH-V2-2026:END -->
+
 #  SYNERGY MetaChain — verified technical dossier
 
 > **Статус:**  CANDIDATE — trust-consumer/replay guard реализован; полноценный cross-chain bridge/state machine ещё не доказан.
